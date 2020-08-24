@@ -17,7 +17,6 @@
 
 package com.qihoo360.replugin.gradle.plugin.manifest
 
-import com.android.build.gradle.tasks.ManifestProcessorTask
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 
@@ -67,11 +66,18 @@ public class ManifestAPI {
             } catch (Exception e) {
 //                manifestOutputFile = new File(processManifestTask.getManifestOutputDirectory(), "AndroidManifest.xml")
 //                instantRunManifestOutputFile = new File(processManifestTask.getInstantRunManifestOutputDirectory(), "AndroidManifest.xml")
-                // replugin-androidx适配高版本gradle api
-                def dir =   ((ManifestProcessorTask)processManifestTask).getManifestOutputDirectory()
-                manifestOutputFile = new File(dir.getAsFile().get(), "AndroidManifest.xml")
-                dir = ((ManifestProcessorTask)processManifestTask).getInstantAppManifestOutputDirectory()
-                instantRunManifestOutputFile = new File(dir.getAsFile().get(), "AndroidManifest.xml")
+                def dir = processManifestTask.getManifestOutputDirectory()
+                if (dir instanceof File || dir instanceof String) {
+                    manifestOutputFile = new File(dir, "AndroidManifest.xml")
+                } else {
+                    manifestOutputFile = new File(dir.getAsFile().get(), "AndroidManifest.xml")
+                }
+                dir = processManifestTask.getInstantRunManifestOutputDirectory()
+                if (dir instanceof File || dir instanceof String) {
+                    instantRunManifestOutputFile = new File(dir, "AndroidManifest.xml")
+                } else {
+                    instantRunManifestOutputFile = new File(dir.getAsFile().get(), "AndroidManifest.xml")
+                }
             }
 
             if (manifestOutputFile == null && instantRunManifestOutputFile == null) {
