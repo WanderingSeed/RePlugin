@@ -21,5 +21,6 @@
     <string name="startDemo4">Start plugin webview</string>
     <string name="startDemo1ForResult">Start plugin demo1(forResult)</string>
     <string name="startDemo1LoadFragment">Start plugin demo1(Fragment from demo1)</string>
-    <string name="installPluginFromAssets">Install or update external plugin</string>
+    <string name="installPluginFromAssets">Install or update external plugin from assets</string>
+    <string name="installPluginFromSdcard">Install or update external plugin from sdcard</string>
 </resources>

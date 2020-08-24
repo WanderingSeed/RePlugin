@@ -17,8 +17,10 @@
 package com.qihoo360.replugin.sample.demo2.databinding;
 
 import android.app.Activity;
-import android.databinding.DataBindingUtil;
+
 import android.os.Bundle;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.qihoo360.replugin.sample.demo2.R;
 

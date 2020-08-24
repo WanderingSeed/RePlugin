@@ -17,12 +17,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.qihoo360.replugin.sample.host"
-        minSdkVersion 9
-        targetSdkVersion 22
+        minSdkVersion 14
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
     }
@@ -36,14 +36,15 @@ android {
 
 apply plugin: 'replugin-host-gradle'
 repluginHostConfig {
-    useAppCompat = true
+    useAppCompat = false
 
     // 可以在这里自定义常驻进程的名字
     // persistentName = ":XXXXService"
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile "com.qihoo360.replugin:replugin-host-lib:${RP_VERSION}"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.bzl.replugin:replugin-host-lib:2.3.3.1'
 }

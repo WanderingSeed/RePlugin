@@ -16,18 +16,20 @@
 buildscript {
     { p, cfg = "rp-config.gradle" -> if (new File(p, cfg).exists()) apply from: "${p}/${cfg}" else if (p.exists()) call(p.parentFile) }(buildscript.sourceFile.parentFile)
     repositories {
-        mavenLocal()
+        maven { url 'http://10.8.202.224:8088/repository/maven-public/' } // 组内maven仓库
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "com.qihoo360.replugin:replugin-host-gradle:${RP_VERSION}"
+        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath "com.bzl.replugin:replugin-host-gradle:2.3.3.1"
     }
 }
 
 allprojects {
     repositories {
-        mavenLocal()
+        maven { url 'http://10.8.202.224:8088/repository/maven-public/' } // 组内maven仓库
+        google()
         jcenter()
     }
 }

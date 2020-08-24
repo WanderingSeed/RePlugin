@@ -60,7 +60,8 @@ repluginPluginConfig {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile "com.qihoo360.replugin:replugin-plugin-lib:${RP_VERSION}"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly 'androidx.appcompat:appcompat:1.1.0'
+//    compile 'com.android.support:appcompat-v7:25.3.1'
+    implementation "com.bzl.replugin:replugin-plugin-lib:${RP_VERSION}"
 }

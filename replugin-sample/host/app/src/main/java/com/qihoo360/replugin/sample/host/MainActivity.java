@@ -16,20 +16,28 @@
 
 package com.qihoo360.replugin.sample.host;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.qihoo360.replugin.RePlugin;
+import com.qihoo360.replugin.helper.LogDebug;
 import com.qihoo360.replugin.model.PluginInfo;
 import com.qihoo360.replugin.utils.FileUtils;
+import com.qihoo360.replugin.utils.ReflectUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,12 +46,24 @@ import java.io.InputStream;
 /**
  * @author RePlugin Team
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
+
+    private static final int PERMISSION_REQUEST_CODE_STORAGE = 20171222;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        int dynamicThemeId = -1;
+        try {
+            dynamicThemeId = (int) ReflectUtils.invokeMethod(getClassLoader(),
+                    "android.view.ContextThemeWrapper", "getThemeResId", this, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LogDebug.d("theme","MainActivity dynamicThemeId:"+dynamicThemeId);
+        LogDebug.d("theme","MainActivity id:"+androidx.appcompat.R.style.Theme_AppCompat);
+
         findViewById(R.id.btn_start_demo1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,8 +133,35 @@ public class MainActivity extends Activity {
             }
         });
 
+        findViewById(R.id.btn_start_demo2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 刻意以“包名”来打开
+                RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("com.qihoo360.replugin.sample.demo2", "com.qihoo360.replugin.sample.demo2.activity.appcompat.AppCompatActivityDemo"));
+            }
+        });
+
         // 刻意使用Thread的ClassLoader来测试效果
         testThreadClassLoader();
+
+        // 获取权限
+        if (!hasPermission()) {
+            requestPermission();
+        }
+    }
+    private boolean hasPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
+    }
+
+    private void requestPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_STORAGE);
+        }
     }
 
     private void testThreadClassLoader() {
@@ -131,6 +178,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
         if (requestCode == REQUEST_CODE_DEMO1 && resultCode == RESULT_CODE_DEMO1) {
             Toast.makeText(this, data.getStringExtra("data"), Toast.LENGTH_SHORT).show();
         }
@@ -194,5 +242,15 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void simulateInstallExternalSdcardPlugin(){
+        // /storage/emulated/0/Android/data/com.qihoo360.replugin.sample.host/files/rpandroidxfroyo.apk
+        String p = getExternalFilesDir("").getPath()+"/"+"rpandroidxfroyo.apk";
+        PluginInfo pi = RePlugin.install(p);
+        Log.e("MainActivity", "install p:" + p);
+        Log.e("MainActivity", "install pi:" + pi);
+        RePlugin.startActivity(MainActivity.this, RePlugin.createIntent("com.demo.testrpandroidx",
+                "com.demo.testrpandroidx.MainActivity"));
     }
 }
