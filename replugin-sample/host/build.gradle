@@ -22,7 +22,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
-        classpath "com.bzl.replugin:replugin-host-gradle:2.3.3.1"
+        classpath "com.bzl.replugin:replugin-host-gradle:${RP_VERSION}"
     }
 }
 

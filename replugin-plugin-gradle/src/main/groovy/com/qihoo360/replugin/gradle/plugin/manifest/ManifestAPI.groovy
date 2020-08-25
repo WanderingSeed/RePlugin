@@ -72,7 +72,7 @@ public class ManifestAPI {
                 } else {
                     manifestOutputFile = new File(dir.getAsFile().get(), "AndroidManifest.xml")
                 }
-                dir = processManifestTask.getInstantRunManifestOutputDirectory()
+                dir = processManifestTask.getInstantAppManifestOutputDirectory()
                 if (dir instanceof File || dir instanceof String) {
                     instantRunManifestOutputFile = new File(dir, "AndroidManifest.xml")
                 } else {
